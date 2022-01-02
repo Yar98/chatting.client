@@ -1,0 +1,25 @@
+<div class='d-flex align-items-center h-75'>
+    <div class='container w-25'>
+        <form (ngSubmit)='login()' #loginForm='ngForm'>
+            <div class='mb-3'>
+                <label for='name'>Username</label>
+                <input type='text' class='form-control' id='name'
+                    placeholder='Username or email' required
+                    [(ngModel)]="user.userName" name='name' #name='ngModel'>
+            </div>
+            <div class='mb-3'>
+                <label for='password'>Password</label>
+                <input type='password' class='form-control' id='password'
+                    placeholder='password' required
+                    [(ngModel)]='user.password' name='password' #password='ngModel'>
+            </div>
+            <div class='mb-3'>
+                <div class='form-check'>
+                    <input class='form-check-input' type='checkbox' id='checkRemember'>
+                    <label class='form-check-label' for='checkRemember'>Remember me</label>
+                </div>
+            </div>
+            <button type='submit' class='btn btn-primary' [disabled]='!loginForm.form.valid'>Sign in</button>
+        </form>
+    </div>
+</div>
