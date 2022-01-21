@@ -9,6 +9,13 @@ const routes: Routes = [
       import('./module/authentication/authentication.module').then(
         (mod) => mod.AuthenticationModule
       )
+  },
+  {
+    path: 'chat',
+    loadChildren: () => 
+      import('./module/chat/chat.module').then(
+        (mod) => mod.ChatModule
+      )
   }
 ];
 

@@ -1,0 +1,27 @@
+<div class="d-flex h-100">
+    <div class="d-flex flex-column p-3 mb-2 bg-primary text-white w-25">
+        <div>
+            Title
+        </div>
+        <div>
+            <input type="text" class="form-control" id="searchInput" placeholder="Search">
+        </div>
+        <div class="mt-5">
+            <app-room></app-room>
+        </div>
+    </div>
+    
+    <div class="d-flex flex-column p-3 mb-2 bg-success text-white flex-grow-1">
+        <div>
+            Title
+        </div>
+        <div class="d-flex flex-column justify-content-end h-100 p-5">
+            <app-message></app-message>
+        </div>
+        <form class="row g-2" (ngSubmit)="sendMessage(mess.value)">
+            <input type="text" class="form-control col me-4" id="messageInput" placeholder="Type a message..." #mess>
+            <button type="submit" class="btn btn-primary col-1">S</button>
+        </form>
+    </div>
+</div>
+

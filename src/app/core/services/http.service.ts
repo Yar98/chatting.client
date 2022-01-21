@@ -7,7 +7,7 @@ import {Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class HttpService {
-  urlService = environment.API;
+  urlService = '';
   constructor(private http: HttpClient) { }
 
   get(url: string): Observable<any>{
