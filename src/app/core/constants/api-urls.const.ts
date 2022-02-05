@@ -8,6 +8,7 @@ export const API_URLS = {
 
     GET_ALL_ROOMS: 'room',
     GET_ROOMS_OF_USER: 'room/user',
+    GET_ROOM_INBOX_OF_USER: 'room/user/category',
     POST_ROOM: 'room',
     PUT_JOIN_ROOM: 'room/join',
     PUT_LEAVE_ROOM: 'room/leave',

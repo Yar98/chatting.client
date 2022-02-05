@@ -1,0 +1,24 @@
+.dropdown{
+    position: relative;
+}
+
+.dropdown-content{
+    position: absolute;
+    display:none;
+    top: 100%;
+    background-color: #f9f9;
+    min-width: 200px;
+    z-index: 1;
+}
+
+.show{
+    display: block;
+}
+
+.mobile-width{
+    width: 15% !important;
+}
+
+.mobile-display{
+    display: none;
+}

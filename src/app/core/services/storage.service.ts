@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { STORAGE_MANAGER } from '../constants/storage.const';
-import jwt_decode from 'jwt-decode';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { IUser } from '../interface/api-body.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+
+  jwtHelper = new JwtHelperService();
 
   constructor() { }
 
@@ -24,13 +27,16 @@ export class StorageService {
       sessionStorage.setItem(STORAGE_MANAGER.TOKEN, accessToken);
   }
 
-  getUserInfo(){
+  getUserInfo() : IUser {
     const token = this.getAccessToken();
-    const user = jwt_decode(token);
-    return JSON.parse(user as string);
+    const user = this.jwtHelper.decodeToken(token);
+    return {
+      id: user.id,
+      userName: user.userName
+    };
   }
 
-  clearStorage(){
+  clearStorage() {
     localStorage.clear();
     sessionStorage.clear();
   }

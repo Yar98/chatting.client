@@ -18,21 +18,19 @@ export class AuthenticationComponent implements OnInit {
 
   constructor(private httpServices: HttpService,
     private storageService: StorageService,
-    private router: Router) 
-    { 
-      this.httpServices.urlService = environment.USER_API;
-    }
+    private router: Router) {
+  }
 
   ngOnInit(): void {
   }
 
   login(): void {
-    let url = API_URLS.LOGIN;
+    let url =environment.USER_API + API_URLS.LOGIN;
     this.httpServices.post(url, this.user).subscribe(res => {
       let token = res.headers.get('token');
-      console.log(res.headers);
       this.storageService.setAccessToken(token, false);
       this.router.navigate(['chat']);
     });
   }
+
 }

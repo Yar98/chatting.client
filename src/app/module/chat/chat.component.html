@@ -1,26 +1,45 @@
-<div class="d-flex h-100">
-    <div class="d-flex flex-column p-3 mb-2 bg-primary text-white w-25">
-        <div>
-            Title
+<div class="d-flex align-items-stretch h-100">
+    <div class="d-flex flex-column p-sm-3 mb-sm-2 bg-primary h-100 w-25" #leftSide>
+        <div class="d-flex border dropdown" (click)="showDropDownContent()" #dropdown>
+            <div class="d-flex flex-grow-1 w-50">
+                <div class="flex-grow-1 w-25">
+                    <img class="rounded-circle mw-100 mh-100"
+                        src="https://unicphscat.blob.core.windows.net/images-prd/s2702801.png">
+                </div>
+                <div class="w-75" #leftHeaderContent>
+                    Title
+                </div>
+            </div>
+            <div class="dropdown-content h-100" #dropdowncontent>
+                <div>Message Request</div>
+            </div>
         </div>
         <div>
-            <input type="text" class="form-control" id="searchInput" placeholder="Search">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search"
+                (input)="searchUser(searchBox.value)" #searchBox>
         </div>
-        <div class="mt-5">
-            <app-room></app-room>
+        <div class="flex-grow-1 w-100 h-100">
+            <ng-template appLeftSide></ng-template>
         </div>
     </div>
-    
-    <div class="d-flex flex-column p-3 mb-2 bg-success text-white flex-grow-1">
-        <div>
-            Title
+
+    <div class="d-flex flex-column p-sm-3 mb-sm-2 bg-success text-white flex-grow-1 h-100">
+        <div class="d-flex w-100 border">
+            <div class="flex-grow-1" style="width: 10%;">
+                <img class="rounded-circle mw-100 mh-100"
+                    src="https://unicphscat.blob.core.windows.net/images-prd/s2702801.png">
+            </div>
+            <div class="" style="width: 90%;">
+                {{room?.name}}hihi
+            </div>
         </div>
-        <div class="d-flex flex-column justify-content-end h-100 p-5">
-            <app-message></app-message>
+        <div class="d-flex flex-column justify-content-end h-100 w-100 mt-5 overflow-hidden">
+            <app-message class="d-flex flex-column-reverse pb-3 pe-2" style="overflow-y: auto;"></app-message>
         </div>
-        <form class="row g-2" (ngSubmit)="sendMessage(mess.value)">
-            <input type="text" class="form-control col me-4" id="messageInput" placeholder="Type a message..." #mess>
-            <button type="submit" class="btn btn-primary col-1">S</button>
+        <form class="d-flex" (ngSubmit)="sendMessage(mess.value)">
+            <input type="text" class="form-control me-sm-4 w-90" id="messageInput" placeholder="Type a message..."
+                #mess>
+            <button type="submit" class="btn btn-primary">S</button>
         </form>
     </div>
 </div>

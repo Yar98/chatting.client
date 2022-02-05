@@ -1,22 +1,104 @@
-import { Component, OnInit } from '@angular/core';
-import { IRoom } from 'src/app/core/interface/api-body.interface';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+import { IRoom, IRoom_Get, IUser_OfRoom, IUser_OfRoom_Get } from 'src/app/core/interface/api-body.interface';
 import { RoomService } from 'src/app/core/services/room.service';
+import { StorageService } from 'src/app/core/services/storage.service';
 
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, AfterViewInit {
 
-  constructor(private roomService: RoomService) {
-    this.roomService.updateMessageList$.subscribe(data => this.rooms = data);
+  constructor(private roomService: RoomService,
+    private storageService: StorageService) {
+
+    this.roomService.chooseRoom$.subscribe(data => {
+      this.selectRoom = data;
+    });
+
+    this.roomService.updateVirtualRoom$.subscribe(room => {
+      if (!this.rooms)
+        return;
+      let index = this.rooms?.findIndex(r => r.id == this.selectRoom?.id);
+      this.rooms[index] = room;
+      this.selectRoom = room;
+    });
+
+    this.roomService.addRoom$.subscribe(data => {
+      if (!this.rooms)
+        this.rooms = [];
+      this.rooms.unshift(data);
+    });
+  }
+
+  @ViewChild('roomContent') roomContent!: ElementRef;
+  @ViewChild('roomDiv') roomDiv!: ElementRef;
+
+  ngAfterViewInit(): void {
+    if (this.isMobile) {
+      this.roomContent.nativeElement.classList.add('mobile-display');
+      this.roomDiv.nativeElement.classList.remove('rounded-pill');
+      this.roomDiv.nativeElement.classList.add('rounded-circle');
+      this.roomDiv.nativeElement.style.height = this.roomDiv.nativeElement.offsetWidth+'px';
+    }
   }
 
   ngOnInit(): void {
-    this.roomService.getRoomsOfUser('61ddf9ce1e1a20d6219517a8').subscribe(data => this.rooms = data.body);
+    this.isMobile = window.innerWidth < 576;
+
+    this.roomService
+      .getRoomsOfUser$(this.storageService.getUserInfo().id)
+      .subscribe(res => {
+        this.rooms = res.body.map((r: IRoom_Get): IRoom => {
+          return {
+            id: r.id,
+            name: this.handleNameOfRoom(r),
+            category: r.category,
+            isVirtual: false,
+            users: r.users.map((u: IUser_OfRoom_Get): IUser_OfRoom => {
+              return {
+                id: u.id,
+                userName: u.userName,
+                status: u.status
+              };
+            })
+          };
+        });
+        if (!this.rooms) {
+          this.rooms = [];
+          console.log('error');
+          return;
+        }
+        // auto select first room when first load
+        if (this.rooms.length > 0 && !this.selectRoom) {
+          this.chooseRoom(this.rooms[0]);
+        }
+        if (this.selectRoom && !this.rooms.find(r => r.id == this.selectRoom?.id)) {
+          this.rooms.push(this.selectRoom);
+        }
+      });
   }
 
-  rooms: any[] = [];
+  rooms?: IRoom[];
+  selectRoom?: IRoom;
+  isMobile!: boolean;
+
+
+  chooseRoom(room: IRoom): void {
+    this.selectRoom = room;
+    if (this.selectRoom)
+      this.roomService.triggerChooseRoom(this.selectRoom)
+  }
+
+  handleNameOfRoom(room: IRoom_Get): string {
+    if (room.category != 1)
+      return room.name;
+    // room is inbox
+    if (room.users)
+      return this.storageService.getUserInfo().id == room.users[0].id ? room.users[1].userName : room.users[0].userName;
+    return 'undefined';
+  }
 
 }

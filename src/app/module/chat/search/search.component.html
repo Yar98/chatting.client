@@ -1,0 +1,5 @@
+<div class="d-flex flex-column bg-warning h-100" style="overflow-y: auto;">
+    <div *ngFor="let user of users" style="height:10%" class="bg-info" (click)="chooseUser(user)">
+        {{user.userName}}
+    </div>
+</div>
