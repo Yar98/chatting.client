@@ -16,7 +16,11 @@
 }
 
 .mobile-width{
-    width: 15% !important;
+    width: 15%;
+}
+
+.mobile-width-expand{
+    width: 100% !important;
 }
 
 .mobile-display{

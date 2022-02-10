@@ -1,5 +1,5 @@
 import { Injectable, SkipSelf } from '@angular/core';
-import { BehaviorSubject, Observable, of, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { HttpService } from './http.service';
 
 import { environment } from 'src/environments/environment';
@@ -23,6 +23,8 @@ export class RoomService {
   private addRoom: ReplaySubject<IRoom> = new ReplaySubject<IRoom>(1);
   public addRoom$: Observable<IRoom> = this.addRoom.asObservable();
 
+  public expandLeftSide$:Subject<boolean> = new Subject<boolean>();
+
   constructor(private httpService: HttpService,
     private storageService: StorageService,
     private socketioService: SocketioService) {
@@ -31,7 +33,7 @@ export class RoomService {
         console.log(room);
         let result: IRoom = {
           id: room.id,
-          name: room.name,
+          name: this.handleNameOfRoom(room),
           category: room.category,
           isVirtual: false,
           users: room.users
@@ -78,5 +80,15 @@ export class RoomService {
 
   triggerAddRoom(room: IRoom): void {
     this.addRoom.next(room);
+  }
+
+  handleNameOfRoom(room: IRoom_Get): string {
+    if (room.category != 1)
+      return room.name;
+    console.log('handle: '+ room.users[0].userName);
+    // room is inbox
+    if (room.users)
+      return this.storageService.getUserInfo().id == room.users[0].id ? room.users[1].userName : room.users[0].userName;
+    return 'undefined';
   }
 }

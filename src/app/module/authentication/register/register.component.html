@@ -1,0 +1,18 @@
+<div class='container'>
+    <form (ngSubmit)='register()' #loginForm='ngForm'>
+        <div class='mb-3'>
+            <label for='name'>Username</label>
+            <input type='text' class='form-control' id='name'
+                placeholder='Username' required
+                [(ngModel)]="user.userName" name='name' #name='ngModel'>
+        </div>
+        <div class='mb-3'>
+            <label for='password'>Password</label>
+            <input type='password' class='form-control' id='password'
+                placeholder='Password' required
+                [(ngModel)]='user.password' name='password' #password='ngModel'>
+        </div>
+        <button class='btn btn-primary me-5'>Cancel</button>
+        <button type='submit' class='btn btn-primary' [disabled]='!loginForm.form.valid'>Sign up</button>
+    </form>
+</div>

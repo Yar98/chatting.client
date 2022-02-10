@@ -18,6 +18,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   constructor(private messageService: MessageService,
     private roomService: RoomService,
     private userService: UserService) {
+
     roomService.chooseRoom$.subscribe(data => {
       this.room = data;
       if (!this.isRoomComp) {
@@ -29,6 +30,19 @@ export class ChatComponent implements OnInit, AfterViewInit {
         this.isRoomComp = true;
       }
     });
+
+    this.roomService.expandLeftSide$.subscribe(data => {
+      this.isLeftSideExpand = data;
+      if (this.isLeftSideExpand && this.isMobile) {
+        this.leftSide.nativeElement.classList.add('mobile-width-expand');
+        this.leftHeaderContent.nativeElement.classList.remove('mobile-display');
+      }
+      else if (!this.isLeftSideExpand && this.isMobile) {
+        this.leftSide.nativeElement.classList.remove('mobile-width-expand');
+        this.leftHeaderContent.nativeElement.classList.add('mobile-display');
+      }
+    });
+
   }
 
   @ViewChild(LeftSideDirective, { static: true }) appLeftSide!: LeftSideDirective;
@@ -46,6 +60,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
     this.isRoomComp = true;
 
     if (this.isMobile) {
+      this.leftSide.nativeElement.classList.remove('w-25');
       this.leftSide.nativeElement.classList.add("mobile-width");
       this.leftHeaderContent.nativeElement.classList.add('mobile-display');
     }
@@ -58,6 +73,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   room!: IRoom;
   isRoomComp: boolean = false;
   isMobile: any;
+  isLeftSideExpand: boolean = false;
 
   sendMessage(mess: string): void {
     if (!this.room) {
@@ -68,6 +84,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
       console.log('virtual room');
       this.roomService.createRoom$(this.room).subscribe(res => {
         console.log(res.body);
+        this.room = res.body;
         this.messageService.triggerAddMessage(mess, res.body.id);
         this.roomService.triggerUpdateVirtualRoom(res.body);
       });
@@ -86,8 +103,9 @@ export class ChatComponent implements OnInit, AfterViewInit {
   showDropDownContent(): void {
     if (!this.isMobile)
       this.dropdowncontent.nativeElement.classList.toggle("show");
-    else
-      console.log('hhh');
+    if (this.isMobile && this.isLeftSideExpand) {
+      this.dropdowncontent.nativeElement.classList.toggle("show");
+    }
   }
 
   loadComponent(text?: string): void {
@@ -109,9 +127,15 @@ export class ChatComponent implements OnInit, AfterViewInit {
     if (!this.dropdown.nativeElement.contains(event.target)) {
       this.dropdowncontent.nativeElement.classList.remove("show");
     }
-    else if (!this.leftSide.nativeElement.contains(event.target)) {
-      this.leftSide.nativeElement.classList
+    if (!this.leftSide.nativeElement.contains(event.target)) {
+
+      this.roomService.expandLeftSide$.next(false);
     }
+  }
+
+  expandLeft(): void {
+    this.roomService.expandLeftSide$.next(true);
+
   }
 
 }

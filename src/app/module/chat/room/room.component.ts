@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { IRoom, IRoom_Get, IUser_OfRoom, IUser_OfRoom_Get } from 'src/app/core/interface/api-body.interface';
 import { RoomService } from 'src/app/core/services/room.service';
@@ -31,6 +31,17 @@ export class RoomComponent implements OnInit, AfterViewInit {
         this.rooms = [];
       this.rooms.unshift(data);
     });
+
+    this.roomService.expandLeftSide$.subscribe(data => {
+      this.isLeftSideExpand = data;
+      if (this.isMobile) {
+        if (this.isLeftSideExpand)
+          this.roomContent.nativeElement.classList.remove('mobile-display');
+        else
+          this.roomContent.nativeElement.classList.add('mobile-display');
+      }
+    });
+    
   }
 
   @ViewChild('roomContent') roomContent!: ElementRef;
@@ -39,9 +50,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.isMobile) {
       this.roomContent.nativeElement.classList.add('mobile-display');
-      this.roomDiv.nativeElement.classList.remove('rounded-pill');
-      this.roomDiv.nativeElement.classList.add('rounded-circle');
-      this.roomDiv.nativeElement.style.height = this.roomDiv.nativeElement.offsetWidth+'px';
+      this.roomDiv.nativeElement.style.height = this.roomDiv.nativeElement.offsetWidth + 'px';
     }
   }
 
@@ -84,12 +93,16 @@ export class RoomComponent implements OnInit, AfterViewInit {
   rooms?: IRoom[];
   selectRoom?: IRoom;
   isMobile!: boolean;
-
+  isLeftSideExpand!: boolean;
 
   chooseRoom(room: IRoom): void {
     this.selectRoom = room;
-    if (this.selectRoom)
+    if (!this.isMobile)
+      this.roomService.triggerChooseRoom(this.selectRoom);
+    else if (this.isMobile && this.isLeftSideExpand) {
       this.roomService.triggerChooseRoom(this.selectRoom)
+      console.log('hiih');
+    }
   }
 
   handleNameOfRoom(room: IRoom_Get): string {

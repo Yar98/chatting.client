@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ILogin } from 'src/app/core/interface/api-body.interface';
 import { HttpService } from 'src/app/core/services/http.service';
 import { API_URLS } from 'src/app/core/constants/api-urls.const';
@@ -6,6 +7,7 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { Router } from '@angular/router';
 import { PAGE_URLS } from 'src/app/core/constants/page-urls.const';
 import { environment } from 'src/environments/environment';
+import { RegisterComponent } from './register/register.component';
 
 @Component({
   selector: 'app-authentication',
@@ -18,7 +20,8 @@ export class AuthenticationComponent implements OnInit {
 
   constructor(private httpServices: HttpService,
     private storageService: StorageService,
-    private router: Router) {
+    private router: Router,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -31,6 +34,16 @@ export class AuthenticationComponent implements OnInit {
       this.storageService.setAccessToken(token, false);
       this.router.navigate(['chat']);
     });
+  }
+
+  openDialog():void{
+    const dialogRef = this.dialog.open(RegisterComponent, {
+      width: '350px'
+    });
+
+    dialogRef.afterClosed().subscribe(result =>{
+      console.log('this dialog was closed');
+    })
   }
 
 }
