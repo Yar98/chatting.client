@@ -19,7 +19,8 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.messageService.addMessage$.subscribe(data => {
       if(!this.messages)
         this.messages = [];
-      this.messages.unshift(data);
+      if(this.roomService.currentRoom?.id === data.roomId)
+        this.messages.unshift(data);
     });
 
     this.roomService.chooseRoom$.subscribe(data => {
@@ -36,7 +37,8 @@ export class MessageComponent implements OnInit, OnDestroy {
               id: mess.user.id,
               userName: mess.user.userName,
               status: mess.user.status
-            }
+            },
+            roomId: mess.roomId
           };
         }));
     });

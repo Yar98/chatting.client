@@ -31,6 +31,7 @@ export interface IMessage_Get {
         content: string;
     };
     user: IUser_OfRoom_Get;
+    roomId: string;
 }
 
 export interface IRoom_Create {
@@ -79,5 +80,6 @@ export interface IMessage{
         id: string;
         content: string;
     };
-    user: IUser_OfRoom
+    user: IUser_OfRoom;
+    roomId: string;
 }

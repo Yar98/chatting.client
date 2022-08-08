@@ -24,6 +24,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
       let index = this.rooms?.findIndex(r => r.id == this.selectRoom?.id);
       this.rooms[index] = room;
       this.selectRoom = room;
+      this.roomService.currentRoom = room;
     });
 
     this.roomService.addRoom$.subscribe(data => {

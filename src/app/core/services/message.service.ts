@@ -34,7 +34,8 @@ export class MessageService {
         id: message.id,
         content: message.content,
         replyMessage: message.replyMessage,
-        user: message.user
+        user: message.user,
+        roomId: message.roomId
       }
       this.addMessage.next(result);
     });
@@ -57,7 +58,8 @@ export class MessageService {
         id: res.body.id,
         content: res.body.content,
         replyMessage: res.body.replyMessage,
-        user: res.body.user
+        user: res.body.user,
+        roomId: res.body.roomId
       };
       this.addMessage.next(data);
     });
@@ -68,7 +70,7 @@ export class MessageService {
       console.log('getmessage roomId null');
       return new Observable<any>();
     }
-    const url = environment.MESSAGE_API + API_URLS.GET_MESSAGES_OF_ROOM + '/' + roomId;
+    const url = environment.MESSAGE_API + API_URLS.GET_MESSAGES_OF_ROOM + '/' + roomId + '/' + this.storageService.getUserInfo().id;
     let result = this.httpService.get(url);
     return result;
   }

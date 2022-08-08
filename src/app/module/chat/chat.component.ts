@@ -83,10 +83,9 @@ export class ChatComponent implements OnInit, AfterViewInit {
     if (this.room.isVirtual) {
       console.log('virtual room');
       this.roomService.createRoom$(this.room).subscribe(res => {
-        console.log(res.body);
-        this.room = res.body;
-        this.messageService.triggerAddMessage(mess, res.body.id);
+        this.room = res.body;       
         this.roomService.triggerUpdateVirtualRoom(res.body);
+        this.messageService.triggerAddMessage(mess, res.body.id);
       });
       return;
     }

@@ -13,6 +13,6 @@ export const API_URLS = {
     PUT_JOIN_ROOM: 'room/join',
     PUT_LEAVE_ROOM: 'room/leave',
 
-    GET_MESSAGES_OF_ROOM: 'message/room',
+    GET_MESSAGES_OF_ROOM: 'message/room/user',
     POST_MESSAGE: 'message'
 }

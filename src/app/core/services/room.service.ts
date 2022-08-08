@@ -14,6 +14,8 @@ import { SocketioService } from './socketio.service';
 })
 
 export class RoomService {
+  currentRoom ?: IRoom;
+
   private chooseRoom: ReplaySubject<IRoom> = new ReplaySubject<IRoom>(1);
   public chooseRoom$: Observable<IRoom> = this.chooseRoom.asObservable();
 
@@ -71,6 +73,7 @@ export class RoomService {
   }
 
   triggerChooseRoom(room: IRoom): void {
+    this.currentRoom = room;
     this.chooseRoom.next(room);
   }
 
